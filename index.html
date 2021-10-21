@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA tutorial</title>
+    <style>
+        
+        
+        
+        
+    </style>
+    <link rel="stylesheet" href="style.css"> 
+    <!-- LATEX equation interpreter -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+    
+    <!-- INTRODUCTION -->
+    <h1> Genetic Algorithm tutorial </h1>
+    This tutorial will provide possibly one of the simplest hands on tutorials for understanding genetic algorithms. Enjoy!
+    <h2>Problem formulation</h2>
+    Let's consider one of the simple problem of maximising the sum:
+    <p>\(\min \qquad f=\sum_{i=1}^{N} x_{i}  \qquad x_i \in \{0,1\} \)
+    </p>
+    The solution is obviously \( \mathbf{x}=[1, 1, 1, 1, ...] \). <br>
+    Let's use genetic algorithm to find this solution.
+    
+    
+    <!-- INITIATION -->
+    <h2>Initiate population</h2>
+    
+    <button id="initiateButton" onclick="initiate()">Initiate</button>
+    <div id="initiate" style="position:block;overflow:auto"> </div>
+    <script>
+        var npop=4;
+        var genomelength=5;
+        // Initiate random bit arrays
+        var genomes=new Array(npop).fill().map(genome => new Array(genomelength).fill().map(x=>Math.round(Math.random())) );
+        var pop=[];
+        
+        // Creating the Individual class
+        var Individual=function(genome,id){
+            this.genome=genome;
+            this.fitness=genome.reduce((a, b)=>  a + b, 0);;
+            this.id=id;
+            this.update= function(elemId){
+                const popbox= document.getElementById(elemId);
+
+                drawing=document.createElement('div');
+                drawing.id=elemId+'individual'+id;
+                drawing.innerHTML="Individual: "+(id+1)+"<br><br>"
+                drawing.classList.add("genome");
+                drawing.draggable=true;
+                popbox.appendChild(drawing);
+                for (let index = 0; index < genome.length; index++) {
+                    let thisbit = document.createElement('div');
+                    thisbit.id='ind'+id+'bit'+index;
+                    thisbit.innerText=genome[index].toString();
+                    thisbit.classList.add("bit")
+                    drawing.appendChild(thisbit);
+                    if(genome[index]==1){
+                        thisbit.style="background-color:white;";
+                    }else{
+                        thisbit.style="background-color:gray;";
+                    }
+                }
+            }
+        }
+        
+        var initiate=  function (){
+            document.getElementById("initiate").innerHTML="";
+            genomes=new Array(npop).fill().map(genome => new Array(genomelength).fill().map(x=>Math.round(Math.random())) );
+            for (let i = 0; i < npop; i++) {
+                pop[i]  = new Individual(genomes[i],i);
+                pop[i].update('initiate');
+                
+            }
+        }
+    </script>
+    <br>
+    <br>
+    This constitutes the population of solutions.
+    <br>
+    <br>
+    
+    
+    
+    
+    <!-- SELECTION -->
+    <h2>Selection</h2>
+    In this step, we will pick parent individuals for crossover.
+    We will use what's called the tournament selection:
+    Select individuals for the tournament randomly.
+    
+    <div class="selectionbox" style="display:block;width:100%; overflow:hidden">
+        <div class="column" style="overflow:hidden; width:25%;  ">
+            
+            <div class="selection" id="selection1">
+                <button id='pick1button' onclick="pick(1)">Pick randomly</button>
+                <div id="select1"></div>
+            </div>
+            
+            <div class="selection" id="selection2">
+                <button id='pick2button' onclick="pick(2)">Pick randomly</button>
+                <div id="select2"></div>
+            </div> 
+        </div>
+        <div class="column" style="margin:0px; padding:0px; width:25%; ">
+            <svg height="210" width="200">
+                <line x1="0" y1="70" x2="100" y2="70" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="0" y1="140" x2="100" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="100" y1="70" x2="100" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="100" y1="105" x2="200" y2="105" style="stroke:rgb(255,0,0);stroke-width:2" />
+            </svg>
+        </div>
+        <div class="column" style="display:block;overflow:visible; width:25%;">
+            <div class="parent" id="parentbox1">
+                Parent 1 <button id='select1button' onclick="select(1)">Select</button>
+                <div id='parent1'></div>
+            </div> 
+        </div>
+    </div>
+    
+    
+    <div class="selectionbox" style="display:block;width:100%; overflow:hidden">
+        <div class="column" style="overflow:hidden; width:25%;  ">
+            
+            <div class="selection" id="selection3">
+                <button id='pick3button' onclick="pick(3)">Pick randomly</button>
+                <div id="select3"></div>
+            </div>
+            
+            <div class="selection" id="selection4">
+                <button id='pick4button' onclick="pick(4)">Pick randomly</button>
+                <div id="select4"></div>
+            </div> 
+        </div>
+        <div class="column" style="margin:0px; padding:0px; width:25%; ">
+            <svg height="210" width="200">
+                <line x1="0" y1="70" x2="100" y2="70" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="0" y1="140" x2="100" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="100" y1="70" x2="100" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="100" y1="105" x2="200" y2="105" style="stroke:rgb(255,0,0);stroke-width:2" />
+                
+            </svg>
+        </div>
+        <div class="column" style="display:block;overflow:visible; width:25%;">
+            <div class="parent" id="parentbox2">
+                Parent 2 <button id='select2button' onclick="select(2)">Select</button>
+                <div id='parent2'></div>
+            </div> 
+        </div>
+    </div>
+    
+    <script> // SELECTION
+        var parent1, parent2, pickedIndividuals=[1,2,3,4];
+        var pick = function(id){
+            let boxId='select'+id;
+            let boxdiv=document.getElementById(boxId);
+            boxdiv.innerHTML="";
+            let picked =Math.round(Math.random()*(pop.length-1));
+            pop[picked].update(boxId);
+            pickedIndividuals[id-1]=picked;
+        }
+        
+        var select= function(id){
+            let parentId='parent'+id;
+            let cxparentId='cxparent'+id;
+            let rpparentId='rpparent'+id;
+            let parentdiv=document.getElementById('parent'+id);
+            let cxparentdiv=document.getElementById('cxparent'+id);
+            let rpparentdiv=document.getElementById('rpparent'+id);
+            parentdiv.innerHTML="";
+            cxparentdiv.innerHTML="";
+            rpparentdiv.innerHTML="";
+            
+            let selected;
+            if (id==1){
+                if (pop[pickedIndividuals[0]].fitness>pop[pickedIndividuals[1]].fitness){selected=1 ; }else{ selected=2;} 
+                parent1=pickedIndividuals[selected-1]; 
+                console.log('parent 1 is selected '+parent1)
+                pop[parent1].update('parent'+id);
+                pop[parent1].update('cxparent'+id);
+                pop[parent1].update('rpparent'+id);
+            }
+            
+            if (id==2){
+                if (pop[pickedIndividuals[2]].fitness>pop[pickedIndividuals[3]].fitness){selected=3 ; }else{ selected=4;} 
+                parent2=pickedIndividuals[selected-1]; 
+                console.log('parent 2 is selected '+parent2) 
+                pop[parent2].update('parent'+id);
+                pop[parent2].update('cxparent'+id);
+                pop[parent2].update('rpparent'+id);
+            }
+        }
+        
+        
+    </script>
+    
+    
+    
+    <!-- CROSS OVER -->
+    <h2>Crossover or Recombination</h2>
+    
+    <div id="crossoverbox" style="display:block;width:100%; overflow:hidden">
+        <div class="column" style="overflow:hidden; width:25%;  ">
+            <div class="crossover" id="selection1">
+                <div>Parent 1</div>
+                <div id="cxparent1"></div>
+            </div>
+            
+            <div class="crossover" id="selection2">
+                <div>Parent 2</div>
+                <div id="cxparent2"></div>
+            </div> 
+        </div>
+        <div class="column" style="margin:0px; padding:0px; width:25%; ">
+            <svg height="210" width="200">
+                <line x1="0" y1="70" x2="200" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                <line x1="0" y1="140" x2="200" y2="70" style="stroke:rgb(255,0,0);stroke-width:2" />
+            </svg>
+        </div>
+        <div class="column" style="display:block;overflow:visible; width:25%;">
+            <div class="offspring" id="child1box">
+                <div>Child 1</div>
+                <div id="child1"></div>
+            </div>
+            
+            <div class="offspring" id="child2box">
+                <div>Child 2</div>
+                <div id="child2"></div>
+            </div> 
+        </div>
+    </div>
+    <button id='crossoverButton' onclick="crossover()">Crossover</button>
+    
+    <script>
+        var child1,child2;
+        var crossoverrate=0.5;
+        
+        var crossover=function(){
+            parent1genome=pop[parent1].genome;
+            parent2genome=pop[parent2].genome;
+            let child1genome=[],child2genome=[];
+            for (let i = 0; i < parent1genome.length; i++) {
+                
+                if(Math.random()>0.5){
+                    child1genome[i]=parent2genome[i];
+                    child2genome[i]=parent1genome[i]
+                }else{
+                    child1genome[i]=parent1genome[i];
+                    child2genome[i]=parent2genome[i]
+                }
+                
+            }
+            child1=new Individual(child1genome,1);
+            child2=new Individual(child2genome,2);
+            
+            let childdiv,cxchilddiv;
+            childdiv=document.getElementById('child1');
+            cxchilddiv=document.getElementById('childtomutate1');
+            childdiv.innerHTML="";
+            cxchilddiv.innerHTML="";
+            
+            childdiv=document.getElementById('child2');
+            cxchilddiv=document.getElementById('childtomutate2');
+            childdiv.innerHTML="";
+            cxchilddiv.innerHTML="";
+            child1.update('child1');
+            child2.update('child2');
+            child1.update('childtomutate1');
+            child2.update('childtomutate2');
+        }
+    </script>
+    
+    
+    <!-- MUTATION -->
+    <h2>Mutation</h2>
+    
+    <div id="mutatebox" style="display:block;width:100%; overflow:hidden">
+        <div class="column" style="overflow:hidden; width:25%;  ">
+            <div class="offspring" id="childtomutatebox1">
+                <div>Child 1</div>
+                <div id="childtomutate1"></div>
+            </div>
+            <button id='mutate1Button' onclick="mutate(1)">Mutate</button>
+            <div class="mutant" id="mutantbox1">
+                <div>Mutant 1</div>
+                <div id="mutant1"></div>
+            </div> 
+        </div>
+        <div class="column" style="margin:0px; padding:0px; width:25%; ">
+            <svg height="210" width="200">
+                <!-- <line x1="0" y1="70" x2="200" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                    <line x1="0" y1="140" x2="200" y2="70" style="stroke:rgb(255,0,0);stroke-width:2" /> -->
+                </svg>
+            </div>
+            <div class="column" style="overflow:hidden; width:25%;  ">
+                <div class="offspring" id="childtomutatebox1">
+                    <div>Child 2</div>
+                    <div id="childtomutate2"></div>
+                </div>
+                <button  id='mutate2Button' onclick="mutate(2)">Mutate</button>
+                <div class="mutant" id="mutantbox2">
+                    <div>Mutant 2</div>
+                    <div id="mutant2"></div>
+                </div> 
+            </div>
+        </div>
+        
+        <script>
+            var mutant1,mutant2;
+            var mutationrate=1/genomelength;
+            var mutant1genome,mutant2genome;
+            var mutate=function(id){
+                let mutantdiv,mutanttoreplacediv;
+                if(id==1){
+                    mutant1genome=child1.genome;
+                    for (let i = 0; i < mutant1genome.length; i++) {
+                        if(Math.random()<mutationrate){
+                            mutant1genome[i]=1-mutant1genome[i];
+                        }
+                    }
+                    mutant1=new Individual(mutant1genome,1);
+                    
+                    mutantdiv=document.getElementById('mutant1');
+                    rpmutantdiv=document.getElementById('rpmutant1');
+                    mutantdiv.innerHTML="";
+                    rpmutantdiv.innerHTML="";
+                    
+                    
+                    mutant1.update('mutant1');
+                    mutant1.update('rpmutant1');
+                }
+                if(id==2){
+                    mutant2genome=child2.genome;
+                    
+                    for (let i = 0; i < mutant2genome.length; i++) {
+                        if(Math.random()<mutationrate){
+                            mutant2genome[i]=1-mutant2genome[i];
+                        }
+                        
+                    }
+                    mutant2=new Individual(mutant2genome,2);
+                    
+                    
+                    mutantdiv=document.getElementById('mutant2');
+                    rpmutantdiv=document.getElementById('rpmutant2');
+                    mutantdiv.innerHTML="";
+                    rpmutantdiv.innerHTML="";
+                    
+                    mutant2.update('mutant2');
+                    mutant2.update('rpmutant2');
+                }
+                return 0;
+            }
+            
+        </script>
+        
+        
+        <!-- REPLACEMENT -->
+        <h2> Replacement</h2>
+        <div id="replacebox" style="display:block;width:100%; overflow:hidden">
+            <div class="column" style="overflow:hidden; width:25%;  ">
+                <div class="mutant" id="childtoreplacebox1">
+                    <div>Mutant 1</div>
+                    <div id="rpmutant1"></div>
+                </div>
+                <div class="offspring" id="mutantbox1">
+                    <div>Parent 1</div>
+                    <div id="rpparent1"></div>
+                </div> 
+                <button id='replace1Button' onclick="replace(1)">Replace parent with mutant</button>
+                
+            </div>
+            <div class="column" style="margin:0px; padding:0px; width:25%; ">
+                <svg height="210" width="200">
+                    <!-- <line x1="0" y1="70" x2="200" y2="140" style="stroke:rgb(255,0,0);stroke-width:2" />
+                        <line x1="0" y1="140" x2="200" y2="70" style="stroke:rgb(255,0,0);stroke-width:2" /> -->
+                    </svg>
+                </div>
+                <div class="column" style="overflow:hidden; width:25%;  ">
+                    <div class="mutant" id="childtoreplacebox1">
+                        <div>Mutant 2</div>
+                        <div id="rpmutant2"></div>
+                    </div>
+                    <div class="offspring" id="mutantbox2">
+                        <div>Parent 2</div>
+                        <div id="rpparent2"></div>
+                    </div> 
+                    
+                    <button  id='replace2Button' onclick="replace(2)">Replace parent with mutant</button>
+                </div>
+            </div>
+            
+            <script>
+                
+                
+                var replace=function(id){
+                    if(id==1 && mutant1.fitness>=pop[parent1].fitness){
+                        pop[parent1]=new Individual(mutant1genome,parent1);
+                    }
+                    if(id==2 && mutant2.fitness>=pop[parent2].fitness){
+                        pop[parent2]=new Individual(mutant2genome,parent2);
+                    }
+                }
+            </script>
+            
+            
+            <h2>Best found solution</h2>
+            
+            <div id="bestSolutionDiv"></div>
+
+            <button id="updateBestButton" onclick="updateBest()" >Update best solution</button>
+            <button id="repeatButton" onclick="repeat()" >Repeat upto before replacement</button>
+
+            
+            <script>
+                var updateBest=function(){
+                    bestSolutionDiv=document.getElementById('bestSolutionDiv');
+                    bestSolutionDiv.innerHTML="";
+                   bestInd=0;
+                   for (let ind = 1; ind < pop.length; ind++) {
+                       if(pop[bestInd].fitness>=pop[ind].fitness){
+                           bestInd=ind;
+                       }
+                   }
+                    pop[bestInd].update('bestSolutionDiv');
+                }
+                var repeat=function(){
+                    if (typeof(pop[0])=="Individual"){
+                        
+                    }else{
+                        
+                        document.getElementById('initiateButton').click();
+                    }
+                    
+                    document.getElementById('pick1button').click();
+                    document.getElementById('pick2button').click();
+                    document.getElementById('pick3button').click();
+                    document.getElementById('pick4button').click();
+                    
+                    document.getElementById('select1button').click();
+                    document.getElementById('select2button').click();
+                    
+                    document.getElementById('crossoverButton').click();
+                    
+                    document.getElementById('mutate1Button').click();
+                    document.getElementById('mutate2Button').click();
+                    
+                    document.getElementById('updateBestButton').click();
+                    
+                    
+                }
+                
+                
+                
+            </script>
+            
+            
+            
+            
+        </body>
+        </html>
