@@ -418,26 +418,35 @@
             
             <h2>Best found solution</h2>
             
-            <div id="bestSolutionDiv"></div>
+            <div id="bestSolutionDiv" style="overflow: hidden;"></div>
 
             <button id="updateBestButton" onclick="updateBest()" >Update best solution</button>
-            <button id="repeatButton" onclick="repeat()" >Repeat upto before replacement</button>
+            <button id="repeatButton" onclick="repeat()" >Repeat once  </button>
 
-            
+
             <script>
+                var bestInd, bestFitness;
                 var updateBest=function(){
+                    if (pop[0] instanceof Individual){
+                        
+                    }else{
+                        
+                        document.getElementById('initiateButton').click();
+                    }
+
                     bestSolutionDiv=document.getElementById('bestSolutionDiv');
                     bestSolutionDiv.innerHTML="";
                    bestInd=0;
                    for (let ind = 1; ind < pop.length; ind++) {
-                       if(pop[bestInd].fitness>=pop[ind].fitness){
+                       if(pop[ind].fitness>=pop[bestInd].fitness){
                            bestInd=ind;
+                           bestFitness=pop[bestInd].fitness;
                        }
                    }
                     pop[bestInd].update('bestSolutionDiv');
                 }
                 var repeat=function(){
-                    if (typeof(pop[0])=="Individual"){
+                    if (pop[0] instanceof Individual){
                         
                     }else{
                         
