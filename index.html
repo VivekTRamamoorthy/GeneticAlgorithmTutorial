@@ -28,7 +28,7 @@
     <h1> Genetic Algorithm tutorial </h1>
     This tutorial will provide possibly one of the simplest hands on tutorials for understanding genetic algorithms. Enjoy!
     <h2>Problem formulation</h2>
-    Let's consider one of the simple problem of maximising the sum:
+    Let's consider a simple problem of maximising the sum of a bit array:
     <p>\(\min \qquad f=\sum_{i=1}^{N} x_{i}  \qquad x_i \in \{0,1\} \)
     </p>
     The solution is obviously \( \mathbf{x}=[1, 1, 1, 1, ...] \). <br>
@@ -37,7 +37,7 @@
     
     <!-- INITIATION -->
     <h2>Initiate population</h2>
-    
+    Click initiate to generate a pool of random bit arrays. We will call this set of individual candidate solutions as the population. <br><br>
     <button id="initiateButton" onclick="initiate()">Initiate</button>
     <div id="initiate" style="position:block;overflow:auto"> </div>
     <script>
@@ -424,7 +424,7 @@
             <h2>Best found solution</h2>
             After completing one generation, we can see what the best solution in the population. Click update best solution whenever you feel like.
             Finally, you can also conveniently repeat all the steps with a single click. Repeat will check if the solutions are initiated and initiate only if not done.
-            It will also update the best solution for you. 
+            It will also update the best solution for you. Basically you can start clicking repeat right from the start.
             
             <div id="bestSolutionDiv" style="overflow: hidden;"></div>
             <br>
