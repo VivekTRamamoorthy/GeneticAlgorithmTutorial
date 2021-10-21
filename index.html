@@ -54,7 +54,7 @@
             this.id=id;
             this.update= function(elemId){
                 const popbox= document.getElementById(elemId);
-
+                
                 drawing=document.createElement('div');
                 drawing.id=elemId+'individual'+id;
                 drawing.innerHTML="Individual: "+(id+1)+"<br><br>"
@@ -88,7 +88,7 @@
     </script>
     <br>
     <br>
-    This constitutes the population of solutions.
+    This constitutes the current population of solutions.
     <br>
     <br>
     
@@ -97,9 +97,9 @@
     
     <!-- SELECTION -->
     <h2>Selection</h2>
-    In this step, we will pick parent individuals for crossover.
-    We will use what's called the tournament selection:
-    Select individuals for the tournament randomly.
+    In this step, we will pick parent individuals for crossover. We will apply selection pressure by picking from best of two.
+    This is called the tournament selection
+    Pick all individuals for the tournament and let's see who wins.
     
     <div class="selectionbox" style="display:block;width:100%; overflow:hidden">
         <div class="column" style="overflow:hidden; width:25%;  ">
@@ -210,7 +210,9 @@
     
     <!-- CROSS OVER -->
     <h2>Crossover or Recombination</h2>
-    
+    The selected individuals are allowed to mate. In this step, we demonstrate uniform crossover. 
+    Each bit is swap with a 50% probability.
+    Click crossover as many times as you want. Each time a new pair of children will be generated.
     <div id="crossoverbox" style="display:block;width:100%; overflow:hidden">
         <div class="column" style="overflow:hidden; width:25%;  ">
             <div class="crossover" id="selection1">
@@ -285,7 +287,8 @@
     
     <!-- MUTATION -->
     <h2>Mutation</h2>
-    
+    We take the children of the crossover operation and mutate thm. Each bit is flipped with a probability of 1/array length.
+    Click mutate as many times as you want to understand how this works.
     <div id="mutatebox" style="display:block;width:100%; overflow:hidden">
         <div class="column" style="overflow:hidden; width:25%;  ">
             <div class="offspring" id="childtomutatebox1">
@@ -369,6 +372,8 @@
         
         <!-- REPLACEMENT -->
         <h2> Replacement</h2>
+        In this step, we will replace the mutants into the parent population, if and only if they have better fitness than the parent member.
+        If the parent is better, it will not be replaced.
         <div id="replacebox" style="display:block;width:100%; overflow:hidden">
             <div class="column" style="overflow:hidden; width:25%;  ">
                 <div class="mutant" id="childtoreplacebox1">
@@ -417,32 +422,44 @@
             
             
             <h2>Best found solution</h2>
+            After completing one generation, we can see what the best solution in the population. Click update best solution whenever you feel like.
+            Finally, you can also conveniently repeat all the steps with a single click. Repeat will check if the solutions are initiated and initiate only if not done.
+            It will also update the best solution for you. 
             
             <div id="bestSolutionDiv" style="overflow: hidden;"></div>
-
+            <br>
+            <br>
+            
             <button id="updateBestButton" onclick="updateBest()" >Update best solution</button>
-            <button id="repeatButton" onclick="repeat()" >Repeat once  </button>
-
-
+            <button id="repeatButton" onclick="repeat()" >Repeat all steps once  </button>
+            
+            
             <script>
                 var bestInd, bestFitness;
                 var updateBest=function(){
                     if (pop[0] instanceof Individual){
                         
+                        
                     }else{
                         
                         document.getElementById('initiateButton').click();
                     }
+                    document.getElementById("initiate").innerHTML="";
+                    for (let i = 0; i < npop; i++) {
 
+                        pop[i].update('initiate'); // update the population displayed
+                        
+                    }
+                    
                     bestSolutionDiv=document.getElementById('bestSolutionDiv');
                     bestSolutionDiv.innerHTML="";
-                   bestInd=0;
-                   for (let ind = 1; ind < pop.length; ind++) {
-                       if(pop[ind].fitness>=pop[bestInd].fitness){
-                           bestInd=ind;
-                           bestFitness=pop[bestInd].fitness;
-                       }
-                   }
+                    bestInd=0;
+                    for (let ind = 1; ind < pop.length; ind++) {
+                        if(pop[ind].fitness>=pop[bestInd].fitness){
+                            bestInd=ind;
+                            bestFitness=pop[bestInd].fitness;
+                        }
+                    }
                     pop[bestInd].update('bestSolutionDiv');
                 }
                 var repeat=function(){
@@ -466,6 +483,9 @@
                     document.getElementById('mutate1Button').click();
                     document.getElementById('mutate2Button').click();
                     
+                    document.getElementById('replace1Button').click();
+                    document.getElementById('replace2Button').click();
+                    
                     document.getElementById('updateBestButton').click();
                     
                     
@@ -475,8 +495,12 @@
                 
             </script>
             
-            
-            
+            <br>
+            <br>
+            Hope you understand how genetic algorithms work. Cheers for trying out this tutorial!
+            <br>
+            <br>
+            Vivek T. Ramamoorthy
             
         </body>
         </html>
