@@ -1,7 +1,7 @@
 
 
 body{
-    margin: 0%;
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background-color: whitesmoke;
     font-size:medium;
@@ -80,15 +80,16 @@ body{
   
   .header{
     /* background-image: url(http://cdn.eso.org/images/screen/eso0932a.jpg) ; */
-    
+    width: 100%;
+
     margin:0%;
     height:10%;
-    width:100%;
+    display:block;
     top:0px;
     overflow:auto;
     background-color: #222;
-    color: white;
-    font-size: x-large;
+    color: whitesmoke;
+    font-size: large;
     font-weight: bold;
   
   
@@ -114,130 +115,100 @@ button{
 .column{
     float:left;
     overflow:hidden;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
+
+.genomebox{
+  padding:2px ;
+}
+
+.genomeName{
+  text-align: center;
+}
+
 .genome{
-    float:left;
-    padding-top:1%;
-    padding-left:5%;
+  display:flex;
+  padding:1% 5%;
+  flex:nowrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
+
 .bit{
     width:20px;
     height:20px;
-    
+    text-align: center;
     border: 1px solid black;
-    float:left
 }
+
+.container{
+
+  padding:10px 5%;
+  margin:10px 5px;
+  width:70%;
+  height:78px;
+  width:80%;
+
+}
+
+.initiate{
+  width:100%;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+}
+
+
+.flex-box{
+  display:flex;
+  width:100%; 
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.flex-column{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .selection{
-    width:70%;
-    height:78px;
-    padding-top:10px;
-    padding-bottom:10px;
-    padding-left:5%;
-    padding-right:5%;
-    margin-left:10px;
-    margin-top:5px;
-    margin-bottom:5px;
     border:1px solid red;
-    
-    
 }
+
 
 .parent{
-    width:70%;
-    height:198px;
-    padding-top:5%;
-    padding-left:5%;
-    margin-left:5px;
-    margin-top:5px;
     border:1px solid green;
     
 }
+
+
 .crossover{
-    width:70%;
-    height:78px;
-    padding-top:10px;
-    padding-bottom:10px;
-    padding-left:5%;
-    padding-right:5%;
-    margin-left:10px;
-    margin-top:5px;
-    margin-bottom:5px;
     border:1px solid green;
-    
-    
 }
 .offspring{
-    width:70%;
-    height:78px;
-    padding-top:10px;
-    padding-bottom:10px;
-    padding-left:5%;
-    padding-right:5%;
-    margin-left:10px;
-    margin-top:5px;
-    margin-bottom:5px;
     border:1px solid blue;
-    
-    
 }
 .mutant{
-    width:70%;
-    height:78px;
-    padding-top:10px;
-    padding-bottom:10px;
-    padding-left:5%;
-    padding-right:5%;
-    margin-left:10px;
-    margin-top:5px;
-    margin-bottom:5px;
     border:1px solid green;
-    
-    
 }
 
-
-
-
-.arrow-up {
-    width: 0; 
-    height: 0; 
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    
-    border-bottom: 5px solid black;
-}
-
-.arrow-down {
-    width: 0; 
-    height: 0; 
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    
-    border-top: 20px solid #f00;
-}
-
-.arrow-right {
-    width: 0; 
-    height: 0; 
-    border-top: 60px solid transparent;
-    border-bottom: 60px solid transparent;
-    
-    border-left: 60px solid green;
-}
-
-.arrow-left {
-    width: 0; 
-    height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent; 
-    
-    border-right:10px solid blue; 
-}
-
-/* <div class="arrow-up"></div>
-<div class="arrow-down"></div>
-<div class="arrow-left"></div>
-<div class="arrow-right"></div> */
 
 
 /* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
