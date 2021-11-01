@@ -37,8 +37,10 @@
         <!-- INITIATION -->
         <h2>Initiate population</h2>
         Click initiate to generate a pool of random bit arrays. We will call these individual candidate solutions as the population. <br><br>
+        <center>
         <button id="initiateButton" onclick="initiate()">Initiate</button>
-        <div id="initiate"> </div>
+        </center>
+        <div id="initiate" class="initiate"> </div>
         <script>
             var npop=4;
             var genomelength=5;
@@ -134,7 +136,7 @@
                 </div> 
             </div>
         </div>
-     
+        
         <div class="flex-box selectionbox" >
             <div class="column" style="width:35%;  ">
                 
@@ -191,18 +193,18 @@
                     if (pop[pickedIndividuals[0]].fitness>pop[pickedIndividuals[1]].fitness){selected=1 ; }else{ selected=2;} 
                     parent1=pickedIndividuals[selected-1]; 
                     console.log('parent 1 is selected '+parent1)
-                    pop[parent1].update('parent'+id);
-                    pop[parent1].update('cxparent'+id);
-                    pop[parent1].update('rpparent'+id);
+                    pop[parent1].update('parent'+id,'Individual '+(parent1+1));
+                    pop[parent1].update('cxparent'+id,'Individual '+(parent1+1));
+                    pop[parent1].update('rpparent'+id,'Individual '+(parent1+1));
                 }
                 
                 if (id==2){
                     if (pop[pickedIndividuals[2]].fitness>pop[pickedIndividuals[3]].fitness){selected=3 ; }else{ selected=4;} 
                     parent2=pickedIndividuals[selected-1]; 
                     console.log('parent 2 is selected '+parent2) 
-                    pop[parent2].update('parent'+id);
-                    pop[parent2].update('cxparent'+id);
-                    pop[parent2].update('rpparent'+id);
+                    pop[parent2].update('parent'+id,'Individual '+(parent2+1));
+                    pop[parent2].update('cxparent'+id,'Individual '+(parent2+1));
+                    pop[parent2].update('rpparent'+id,'Individual '+(parent2+1));
                 }
             }
             
@@ -290,11 +292,14 @@
         </script>
         
         <br><br><br>
+        
+        
+        
         <!-- MUTATION -->
         <h2>Mutation</h2>
         We take the children of the crossover operation and mutate thm. Each bit is flipped with a probability of 1/array length.
         Click mutate as many times as you want to understand how this works.
-        <div id="flex-box mutatebox" >
+        <div class="flex-box mutatebox" >
             <div class="column" style="width:40%; margin:0 4%; ">
                 <div class="container offspring" id="childtomutatebox1">
                     <div>Child 1</div>
@@ -306,210 +311,219 @@
                 </div> 
                 <button id='mutate1Button' onclick="mutate(1)">Mutate</button>
             </div>
-
-                <div class="column" style="width:40%;  ">
-                    <div class="container offspring" id="childtomutatebox1">
-                        <div>Child 2</div>
-                        <div id="childtomutate2"></div>
-                    </div>
-                    <div class="container mutant" id="mutantbox2">
-                        <div>Mutant 2</div>
-                        <div id="mutant2"></div>
-                    </div> 
-                    <button  id='mutate2Button' onclick="mutate(2)">Mutate</button>
+            
+            <div class="column" style="width:40%;  ">
+                <div class="container offspring" id="childtomutatebox1">
+                    <div>Child 2</div>
+                    <div id="childtomutate2"></div>
                 </div>
+                <div class="container mutant" id="mutantbox2">
+                    <div>Mutant 2</div>
+                    <div id="mutant2"></div>
+                </div> 
+                <button  id='mutate2Button' onclick="mutate(2)">Mutate</button>
             </div>
-            
-            <script>
-                var mutant1,mutant2;
-                var mutationrate=1/genomelength;
-                var mutant1genome,mutant2genome;
-                var mutate=function(id){
-                    let mutantdiv,mutanttoreplacediv;
-                    if(id==1){
-                        mutant1genome=child1.genome;
-                        for (let i = 0; i < mutant1genome.length; i++) {
-                            if(Math.random()<mutationrate){
-                                mutant1genome[i]=1-mutant1genome[i];
-                            }
-                        }
-                        mutant1=new Individual(mutant1genome,1);
-                        
-                        mutantdiv=document.getElementById('mutant1');
-                        rpmutantdiv=document.getElementById('rpmutant1');
-                        mutantdiv.innerHTML="";
-                        rpmutantdiv.innerHTML="";
-                        
-                        
-                        mutant1.update('mutant1');
-                        mutant1.update('rpmutant1');
-                    }
-                    if(id==2){
-                        mutant2genome=child2.genome;
-                        
-                        for (let i = 0; i < mutant2genome.length; i++) {
-                            if(Math.random()<mutationrate){
-                                mutant2genome[i]=1-mutant2genome[i];
-                            }
-                            
-                        }
-                        mutant2=new Individual(mutant2genome,2);
-                        
-                        
-                        mutantdiv=document.getElementById('mutant2');
-                        rpmutantdiv=document.getElementById('rpmutant2');
-                        mutantdiv.innerHTML="";
-                        rpmutantdiv.innerHTML="";
-                        
-                        mutant2.update('mutant2');
-                        mutant2.update('rpmutant2');
-                    }
-                    return 0;
-                }
-                
-            </script>
-            
-            <br><br>
-            <!-- REPLACEMENT -->
-            <h2> Replacement</h2>
-            In this step, we will replace the mutants into the parent population, if and only if they have better fitness than the parent member.
-            If the parent is better, it will not be replaced.
-            <div id="flex-row" >
-                <div class="column"  style="width:45%;margin:0 5%;" >
-                    <div class="container mutant" id="childtoreplacebox1">
-                        <div>Mutant 1</div>
-                        <div id="rpmutant1"></div>
-                    </div>
-                    <div class="container offspring" id="mutantbox1">
-                        <div>Parent 1</div>
-                        <div id="rpparent1"></div>
-                    </div> 
-                    <button id='replace1Button' onclick="replace(1)">Replace parent <br> with mutant if better</button>
-                    
-                </div>
-                
-                <div class="column" style="width:45%" >
-                    <div class="container mutant" id="childtoreplacebox1">
-                        <div>Mutant 2</div>
-                        <div id="rpmutant2"></div>
-                    </div>
-                    <div class="container offspring" id="mutantbox2">
-                        <div>Parent 2</div>
-                        <div id="rpparent2"></div>
-                    </div> 
-                    
-                    <button  id='replace2Button' onclick="replace(2)">Replace parent <br>with mutant if better</button>
-                </div>
-            </div>
-            
-            <script>
-                
-                
-                var replace=function(id){
-                    if(id==1 && mutant1.fitness>=pop[parent1].fitness){
-                        pop[parent1]=new Individual(mutant1genome,parent1);
-                    }
-                    if(id==2 && mutant2.fitness>=pop[parent2].fitness){
-                        pop[parent2]=new Individual(mutant2genome,parent2);
-                    }
-                }
-            </script>
-            
-            
-            <h2>Best found solution</h2>
-            After completing one generation, we can see what the best solution in the population. Click update best solution whenever you feel like.
-            Finally, you can also conveniently repeat all the steps with a single click. Repeat will check if the solutions are initiated and initiate only if not done.
-            It will also update the best solution for you. Basically you can start clicking repeat right from the start.
-            
-            <div id="bestSolutionDiv" style="overflow: hidden;"></div>
-            <br>
-            <br>
-            <center>
-                <button id="updateBestButton" onclick="updateBest()" >Update best solution</button>
-                <br><br>
-                <button id="repeatButton" onclick="repeat()" >Repeat all steps once  </button>
-                
-            </center>
-            <script>
-                var bestInd, bestFitness;
-                var updateBest=function(){
-                    if (pop[0] instanceof Individual){
-                        
-                        
-                    }else{
-                        
-                        document.getElementById('initiateButton').click();
-                    }
-                    document.getElementById("initiate").innerHTML="";
-                    for (let i = 0; i < npop; i++) {
-                        
-                        pop[i].update('initiate'); // update the population displayed
-                        
-                    }
-                    
-                    bestSolutionDiv=document.getElementById('bestSolutionDiv');
-                    bestSolutionDiv.innerHTML="";
-                    bestInd=0;
-                    for (let ind = 1; ind < pop.length; ind++) {
-                        if(pop[ind].fitness>=pop[bestInd].fitness){
-                            bestInd=ind;
-                            bestFitness=pop[bestInd].fitness;
-                        }
-                    }
-                    pop[bestInd].update('bestSolutionDiv');
-                }
-                var repeat=function(){
-                    if (pop[0] instanceof Individual){
-                        
-                    }else{
-                        
-                        document.getElementById('initiateButton').click();
-                    }
-                    
-                    document.getElementById('pick1button').click();
-                    document.getElementById('pick2button').click();
-                    document.getElementById('pick3button').click();
-                    document.getElementById('pick4button').click();
-                    
-                    document.getElementById('select1button').click();
-                    document.getElementById('select2button').click();
-                    
-                    document.getElementById('crossoverButton').click();
-                    
-                    document.getElementById('mutate1Button').click();
-                    document.getElementById('mutate2Button').click();
-                    
-                    document.getElementById('replace1Button').click();
-                    document.getElementById('replace2Button').click();
-                    
-                    document.getElementById('updateBestButton').click();
-                    
-                    
-                }
-                
-                
-                
-            </script>
-            
-            <br>
-            <br>
-            Hope you understood how genetic algorithms work. Cheers for trying out this tutorial!
-            <br>
-            
-            <br><br><br><br>
-            <br><br><br><br>
         </div>
         
-        <div class="footer" >
+        <script>
+            var mutant1,mutant2;
+            var mutationrate=1/genomelength;
+            var mutant1genome,mutant2genome;
+            var mutate=function(id){
+                let mutantdiv,mutanttoreplacediv;
+                if(id==1){
+                    mutant1genome=child1.genome;
+                    for (let i = 0; i < mutant1genome.length; i++) {
+                        if(Math.random()<mutationrate){
+                            mutant1genome[i]=1-mutant1genome[i];
+                        }
+                    }
+                    mutant1=new Individual(mutant1genome,1);
+                    
+                    mutantdiv=document.getElementById('mutant1');
+                    rpmutantdiv=document.getElementById('rpmutant1');
+                    mutantdiv.innerHTML="";
+                    rpmutantdiv.innerHTML="";
+                    
+                    
+                    mutant1.update('mutant1');
+                    mutant1.update('rpmutant1');
+                }
+                if(id==2){
+                    mutant2genome=child2.genome;
+                    
+                    for (let i = 0; i < mutant2genome.length; i++) {
+                        if(Math.random()<mutationrate){
+                            mutant2genome[i]=1-mutant2genome[i];
+                        }
+                        
+                    }
+                    mutant2=new Individual(mutant2genome,2);
+                    
+                    
+                    mutantdiv=document.getElementById('mutant2');
+                    rpmutantdiv=document.getElementById('rpmutant2');
+                    mutantdiv.innerHTML="";
+                    rpmutantdiv.innerHTML="";
+                    
+                    mutant2.update('mutant2');
+                    mutant2.update('rpmutant2');
+                }
+                return 0;
+            }
             
-            MIT License 2.0 
-            <br><br>
-            Vivek T. Ramamoorthy<br>
-            <a  href="https://VivekTRamamoorthy.github.io" target="_blank">Homepage</a> 
-            | <a href="https://github.com/VivekTRamamoorthy" target="_blank">Github</a> 
+        </script>
+        <div></div>
+        <br><br>
+        
+        
+        <!-- REPLACEMENT -->
+        <h2> Replacement</h2>
+        In this step, we will replace the mutants into the parent population, if and only if they have better fitness than the parent member.
+        If the parent is better, it will not be replaced.
+        <div class="flex-row" >
+            <div class="column"  style="width:45%;margin:0 5%;" >
+                <div class="container mutant" id="childtoreplacebox1">
+                    <div>Mutant 1</div>
+                    <div id="rpmutant1"></div>
+                </div>
+                <div class="container offspring" id="mutantbox1">
+                    <div>Parent 1</div>
+                    <div id="rpparent1"></div>
+                </div> 
+                <button id='replace1Button' onclick="replace(1)">Replace parent <br> with mutant if better</button>
+                
+            </div>
             
-            
+            <div class="column" style="width:45%" >
+                <div class="container mutant" id="childtoreplacebox1">
+                    <div>Mutant 2</div>
+                    <div id="rpmutant2"></div>
+                </div>
+                <div class="container offspring" id="mutantbox2">
+                    <div>Parent 2</div>
+                    <div id="rpparent2"></div>
+                </div> 
+                
+                <button  id='replace2Button' onclick="replace(2)">Replace parent <br>with mutant if better</button>
+            </div>
         </div>
         
-    </body>
-    </html>
+        <script>
+            
+            
+            var replace=function(id){
+                if(id==1 && mutant1.fitness>=pop[parent1].fitness){
+                    pop[parent1]=new Individual(mutant1genome,parent1);
+                }
+                if(id==2 && mutant2.fitness>=pop[parent2].fitness){
+                    pop[parent2]=new Individual(mutant2genome,parent2);
+                }
+            }
+        </script>
+        
+        
+        <h2>Best found solution</h2>
+        After completing one generation, we can see what the best solution in the population. Click update best solution whenever you feel like.
+        
+        <div id="bestSolutionDiv" class="flex-box"></div>
+        <br>
+        <br>
+        <center>
+            <button id="updateBestButton" onclick="updateBest()" >Update best solution</button>
+            <br><br>
+            
+        </center>
+        <br>
+        <br>
+        <h2>Repeat</h2>
+        Finally, you can also conveniently repeat all the steps with a single click. Repeat will check if the solutions are initiated and initiate only if not done.
+        It will also update the best solution for you. Basically you can start clicking repeat right from the start.
+        <center>
+            <button id="repeatButton" onclick="repeat()" >Repeat all steps once  </button>
+            <br><br>
+            <div id="generationNo">Generation: 1</div>
+        </center>
+        <script>
+            var bestInd, bestFitness, generationNo=1;;
+            var updateBest=function(){
+                if (pop[0] instanceof Individual){
+                    
+                    
+                }else{
+                    
+                    document.getElementById('initiateButton').click();
+                }
+                document.getElementById("initiate").innerHTML="";
+                for (let i = 0; i < npop; i++) {
+                    
+                    pop[i].update('initiate'); // update the population displayed
+                    
+                }
+                
+                bestSolutionDiv=document.getElementById('bestSolutionDiv');
+                bestSolutionDiv.innerHTML="";
+                bestInd=0;
+                for (let ind = 1; ind < pop.length; ind++) {
+                    if(pop[ind].fitness>=pop[bestInd].fitness){
+                        bestInd=ind;
+                        bestFitness=pop[bestInd].fitness;
+                    }
+                }
+                pop[bestInd].update('bestSolutionDiv');
+            }
+            var repeat=function(){
+                if (pop[0] instanceof Individual){
+                    
+                }else{
+                    
+                    document.getElementById('initiateButton').click();
+                }
+                
+                document.getElementById('pick1button').click();
+                document.getElementById('pick2button').click();
+                document.getElementById('pick3button').click();
+                document.getElementById('pick4button').click();
+                
+                document.getElementById('select1button').click();
+                document.getElementById('select2button').click();
+                
+                document.getElementById('crossoverButton').click();
+                
+                document.getElementById('mutate1Button').click();
+                document.getElementById('mutate2Button').click();
+                
+                document.getElementById('replace1Button').click();
+                document.getElementById('replace2Button').click();
+                
+                document.getElementById('updateBestButton').click();
+                generationNo+=1;
+                document.getElementById("generationNo").innerText="Generation: "+generationNo;
+            }
+            
+            
+            
+        </script>
+        
+        <br>
+        <br>
+        Hope you understood how genetic algorithms work. Cheers for trying out this tutorial!
+        <br>
+        
+        <br><br><br><br>
+        <br><br><br><br>
+    </div>
+    
+    <div class="footer" >
+        
+        MIT License 2.0 
+        <br><br>
+        Vivek T. Ramamoorthy<br>
+        <a  href="https://VivekTRamamoorthy.github.io" target="_blank">Homepage</a> 
+        | <a href="https://github.com/VivekTRamamoorthy" target="_blank">Github</a> 
+        
+        
+    </div>
+    
+</body>
+</html>
