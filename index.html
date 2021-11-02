@@ -53,7 +53,7 @@
                 this.genome=genome;
                 this.fitness=genome.reduce((a, b)=>  a + b, 0);;
                 this.id=id;
-                this.update= function(elemId,text=""){
+                this.update= function(elemId,text="",styles=new Array(genome.length).fill().map(x=>"")){
                     const popbox= document.getElementById(elemId);
                     
                     genomebox=document.createElement("div");
@@ -74,13 +74,14 @@
                         let thisbit = document.createElement('div');
                         thisbit.id=elemId+name+id+'bit'+index;
                         thisbit.innerText=genome[index].toString();
-                        thisbit.classList.add("bit")
-                        genomedrawing.appendChild(thisbit);
+                        thisbit.classList.add("bit");
+                        thisbit.style=styles[index]; // styles override
                         if(genome[index]==1){
-                            thisbit.style="background-color:white;";
+                            thisbit.classList.add("style-for-1");
                         }else{
-                            thisbit.style="background-color:gray;";
+                            thisbit.classList.add("style-for-0");
                         }
+                        genomedrawing.appendChild(thisbit);
                     }
                 }
             }
@@ -90,7 +91,7 @@
                 genomes=new Array(npop).fill().map(genome => new Array(genomelength).fill().map(x=>Math.round(Math.random())) );
                 for (let i = 0; i < npop; i++) {
                     pop[i]  = new Individual(genomes[i],i);
-                    pop[i].update('initiate','Individual ' +(i+1));
+                    pop[i].update('initiate','Individual '+(i+1));
                     
                 }
             }
@@ -109,7 +110,7 @@
         Pick all individuals for the tournament and click "select" to see who wins the tournament.
         
         <div class="flex-box selectionbox" >
-            <div class="column" style="width:35%;  ">
+            <div class="column containercol">
                 
                 <div class="container selection" id="selection1">
                     <button id='pick1button' onclick="pick(1)">Pick randomly</button>
@@ -121,7 +122,7 @@
                     <div id="select2"></div>
                 </div> 
             </div>
-            <div class="column" style="width:25%; ">
+            <div class="column svgcol" >
                 <svg height="100%" width="100%">
                     <line x1="0%" y1="30%" x2="50%" y2="30%" style="stroke:rgb(255,0,0);stroke-width:2" />
                     <line x1="0%" y1="70%" x2="50%" y2="70%" style="stroke:rgb(255,0,0);stroke-width:2" />
@@ -129,16 +130,18 @@
                     <line x1="50%" y1="50%" x2="100%" y2="50%" style="stroke:rgb(255,0,0);stroke-width:2" />
                 </svg>
             </div>
-            <div class="column" style="width:35%;">
+            <div class="column containercol" >
                 <div class="container parent" id="parentbox1">
-                    Parent 1 <button id='select1button' onclick="select(1)">Select</button>
+                    Parent 1 
+                    <br>
+                    <button id='select1button' onclick="select(1)">Select</button>
                     <div id='parent1'></div>
                 </div> 
             </div>
         </div>
         
         <div class="flex-box selectionbox" >
-            <div class="column" style="width:35%;  ">
+            <div class="column containercol">
                 
                 <div class="container selection" id="selection3">
                     <button id='pick3button' onclick="pick(3)">Pick randomly</button>
@@ -150,7 +153,7 @@
                     <div id="select4"></div>
                 </div> 
             </div>
-            <div class="column" style="width:25%; ">
+            <div class="column svgcol" >
                 <svg height="100%" width="100%">
                     <line x1="0%" y1="30%" x2="50%" y2="30%" style="stroke:rgb(255,0,0);stroke-width:2" />
                     <line x1="0%" y1="70%" x2="50%" y2="70%" style="stroke:rgb(255,0,0);stroke-width:2" />
@@ -158,9 +161,11 @@
                     <line x1="50%" y1="50%" x2="100%" y2="50%" style="stroke:rgb(255,0,0);stroke-width:2" />
                 </svg>
             </div>
-            <div class="column" style="width:35%;">
+            <div class="column containercol" >
                 <div class="container parent" id="parentbox2">
-                    Parent 2 <button id='select2button' onclick="select(2)">Select</button>
+                    Parent 2 
+                    <br>
+                    <button id='select2button' onclick="select(2)">Select</button>
                     <div id='parent2'></div>
                 </div> 
             </div>
@@ -168,6 +173,9 @@
         
         <script> // SELECTION
             var parent1, parent2, pickedIndividuals=[1,2,3,4];
+            var parent1styles=new Array(genomelength).fill().map(x=>"background-color:rgba(255,0,0,0.4)");
+            var parent2styles=new Array(genomelength).fill().map(x=>"background-color:rgba(0,0,255,0.4)");
+                
             var pick = function(id){
                 let boxId='select'+id;
                 let boxdiv=document.getElementById(boxId);
@@ -194,7 +202,7 @@
                     parent1=pickedIndividuals[selected-1]; 
                     console.log('parent 1 is selected '+parent1)
                     pop[parent1].update('parent'+id,'Individual '+(parent1+1));
-                    pop[parent1].update('cxparent'+id,'Individual '+(parent1+1));
+                    pop[parent1].update('cxparent'+id,"",parent1styles);
                     pop[parent1].update('rpparent'+id,'Individual '+(parent1+1));
                 }
                 
@@ -203,7 +211,7 @@
                     parent2=pickedIndividuals[selected-1]; 
                     console.log('parent 2 is selected '+parent2) 
                     pop[parent2].update('parent'+id,'Individual '+(parent2+1));
-                    pop[parent2].update('cxparent'+id,'Individual '+(parent2+1));
+                    pop[parent2].update('cxparent'+id,"",parent2styles);
                     pop[parent2].update('rpparent'+id,'Individual '+(parent2+1));
                 }
             }
@@ -219,7 +227,7 @@
         Each bit is swapped with a 50% probability.
         Click crossover as many times as you want. Each time a new pair of children will be generated.
         <div class="flex-box selectionbox" >
-            <div class="column" style=" width:35%;  ">
+            <div class="column containercol"  >
                 <div class="crossover container" id="selection1">
                     <div>Parent 1</div>
                     <div id="cxparent1"></div>
@@ -230,13 +238,13 @@
                     <div id="cxparent2"></div>
                 </div> 
             </div>
-            <div   style="width:25%; ">
+            <div  class="svgcol">
                 <svg height="100%" width="100%">
                     <line x1="0%" y1="30%" x2="100%" y2="70%" style="stroke:rgb(255,0,0);stroke-width:2" />
                     <line x1="0%" y1="70%" x2="100%" y2="30%" style="stroke:rgb(255,0,0);stroke-width:2" />
                 </svg>
             </div>
-            <div class="column" style="width:35%;">
+            <div class="column containercol" >
                 <div class="container offspring" id="child1box">
                     <div>Child 1</div>
                     <div id="child1"></div>
@@ -250,6 +258,8 @@
         </div>
         <center>
             <button id='crossoverButton' onclick="crossover()">Crossover</button>
+        
+        
         </center>
         
         <script>
@@ -260,14 +270,19 @@
                 parent1genome=pop[parent1].genome;
                 parent2genome=pop[parent2].genome;
                 let child1genome=[],child2genome=[];
+                let child1styles=[],child2styles=[];
                 for (let i = 0; i < parent1genome.length; i++) {
                     
                     if(Math.random()>0.5){
                         child1genome[i]=parent2genome[i];
-                        child2genome[i]=parent1genome[i]
+                        child2genome[i]=parent1genome[i];
+                        child1styles[i]=parent2styles[i];
+                        child2styles[i]=parent1styles[i];
                     }else{
                         child1genome[i]=parent1genome[i];
-                        child2genome[i]=parent2genome[i]
+                        child2genome[i]=parent2genome[i];
+                        child1styles[i]=parent1styles[i];
+                        child2styles[i]=parent2styles[i];
                     }
                     
                 }
@@ -284,8 +299,8 @@
                 cxchilddiv=document.getElementById('childtomutate2');
                 childdiv.innerHTML="";
                 cxchilddiv.innerHTML="";
-                child1.update('child1');
-                child2.update('child2');
+                child1.update('child1',"",child1styles);
+                child2.update('child2',"",child2styles);
                 child1.update('childtomutate1');
                 child2.update('childtomutate2');
             }
@@ -300,7 +315,7 @@
         We take the children of the crossover operation and mutate thm. Each bit is flipped with a probability of 1/array length.
         Click mutate as many times as you want to understand how this works.
         <div class="flex-box mutatebox" >
-            <div class="column" style="width:40%; margin:0 4%; ">
+            <div class="column containercol" >
                 <div class="container offspring" id="childtomutatebox1">
                     <div>Child 1</div>
                     <div id="childtomutate1"></div>
@@ -312,7 +327,7 @@
                 <button id='mutate1Button' onclick="mutate(1)">Mutate</button>
             </div>
             
-            <div class="column" style="width:40%;  ">
+            <div class="column containercol" >
                 <div class="container offspring" id="childtomutatebox1">
                     <div>Child 2</div>
                     <div id="childtomutate2"></div>
@@ -382,7 +397,7 @@
         In this step, we will replace the mutants into the parent population, if and only if they have better fitness than the parent member.
         If the parent is better, it will not be replaced.
         <div class="flex-row" >
-            <div class="column"  style="width:45%;margin:0 5%;" >
+            <div class="column containercol"   >
                 <div class="container mutant" id="childtoreplacebox1">
                     <div>Mutant 1</div>
                     <div id="rpmutant1"></div>
@@ -395,7 +410,7 @@
                 
             </div>
             
-            <div class="column" style="width:45%" >
+            <div class="column containercol"  >
                 <div class="container mutant" id="childtoreplacebox1">
                     <div>Mutant 2</div>
                     <div id="rpmutant2"></div>
@@ -457,7 +472,7 @@
                 document.getElementById("initiate").innerHTML="";
                 for (let i = 0; i < npop; i++) {
                     
-                    pop[i].update('initiate'); // update the population displayed
+                    pop[i].update('initiate','Individual '+(i+1)); // update the population displayed
                     
                 }
                 
