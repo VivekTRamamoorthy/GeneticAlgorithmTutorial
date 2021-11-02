@@ -202,6 +202,13 @@ button{
   width:25%;
 }
 
+.style-for-1{
+  background-color: white;
+
+}
+.style-for-0{
+  background-color: gray ;
+}
 
 
 /* On screens that are 992px wide or less, go from four columns to two columns */
