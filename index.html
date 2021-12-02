@@ -26,17 +26,17 @@
     <div class="content" >
         <!-- INTRODUCTION -->
         <h2>Problem formulation</h2>
-        Let's consider a simple problem of maximising the sum of a bit array:
+        Let's consider the simple problem of maximising the sum of a bit array:
         <p>\(\max \qquad f=\sum_{i=1}^{N} x_{i}  \)<br><br>
             \( \qquad \qquad x_i \in \{0,1\} \)
         </p>
         The solution is obviously \( \mathbf{x}=[1, 1, 1, 1, ...] \). <br>
-        Let's use genetic algorithm to find this solution.
+        Let's see how to use genetic algorithms to find this solution.
         
         
         <!-- INITIATION -->
         <h2>Initiate population</h2>
-        Click initiate to generate a pool of random bit arrays. We will call these individual candidate solutions as the population. <br><br>
+        First, let's generate a set of random bit arrays as our initial solutions. We will call these individual candidate solutions as the population. Click on Initiate to do this.<br><br>
         <center>
             <button id="initiateButton" onclick="initiate()">Initiate</button>
         </center>
@@ -105,9 +105,11 @@
         
         <!-- SELECTION -->
         <h2>Selection</h2>
-        In this step, we will pick two parent individuals for crossover. We will apply selection pressure by picking each parent from the best of two.
-        This is called "tournament" selection since it mimics a tournament.
-        Pick all individuals for the tournament and click "select" to see who wins the tournament.
+        In this step, we will pick two parent individuals from the initial population randomly. 
+        We will apply selection pressure by picking the better of two. 
+        This is analogous to "survival of the fittest" in Darwinian evolution.
+        There are other ways to apply selection pressure, but picking the best of two is called "tournament selection" since it mimics a typical knockout tournament.
+        Click all the Pick randomly buttons and then click "select" to see who wins this tournament.
         
         <div class="flex-box selectionbox" >
             <div class="column containercol">
@@ -221,9 +223,11 @@
         
         <!-- CROSS OVER -->
         <h2>Crossover or Recombination</h2>
-        The selected individuals are allowed to mate.
-        Each bit is swapped with a 50% probability.
-        Click crossover as many times as you want. Each time a new pair of children will be generated.
+        The selected individuals in the previous step are allowed to crossover or reproduce. 
+        There are various ways one can perform the crossover and these ways are called crossover operators.
+        In this demonstration, we illustrate three methods, namely uniform, single-point and two-point crossover. 
+        Pick one and click crossover. You may click crossover as many times as you want. 
+        Each time a new pair of children will be generated.
         <div class="flex-box selectionbox" >
             <div class="column containercol"  >
                 <div class="crossover container" id="selection1">
@@ -397,8 +401,8 @@
             
             <!-- MUTATION -->
             <h2>Mutation</h2>
-            We take the children of the crossover operation and mutate thm. Each bit is flipped with a probability of 1/array length.
-            Click mutate as many times as you want to understand how this works.
+            In this step, the recombined solutions of the crossover operation are mutated. In this implementation, each bit is flipped (0 made 1 and 1 made 0) with a probability of 1/(array length). This is achieved using a random number generator.
+            For each bit, generate a random number uniformly between 0 and 1. Flip the bit if the random number is less than the mutation rate. Click mutate as many times as you want.
             <div class="flex-box mutatebox" >
                 <div class="column containercol" >
                     <div class="container offspring" id="childtomutatebox1">
@@ -479,8 +483,9 @@
             
             <!-- REPLACEMENT -->
             <h2> Replacement</h2>
-            In this step, we will replace the mutants into the parent population, if and only if they have better fitness than the parent member.
-            If the parent is better, it will not be replaced.
+            In this step, a decision will be made as to whether the mutated offspring will replace the parents. Again there are several ways to perform this. 
+            In this implementation, a greedy acceptance is used i.e., only if the offspring is strictly better (has more ones) it replaces the parent.
+            Once you click replace button, the population will be updated.
             <div class="flex-row" >
                 <div class="column containercol"   >
                     <div class="container mutant" id="childtoreplacebox1">
@@ -523,7 +528,7 @@
             
             <!-- BEST SOLUTION UPDATE  -->
             <h2>Best found solution</h2>
-            After completing one generation, we can see what the best solution in the population. Click update best solution whenever you feel like.
+            After completing each generation, you can check the best solution obtained so far. The update best solution button may be clicked anytime during the algorithmic process.
             <div id="bestSolutionDiv" class="flex-box"></div>
             <br>
             <br>
@@ -538,10 +543,11 @@
 
             <!-- REPEAT  -->
             <h2>Repeat</h2>
-            Finally, you can also conveniently repeat all the steps with a single click. Repeat will check if the solutions are initiated and initiate only if not done.
-            It will also update the best solution for you. Basically you can start clicking repeat right from the start.
+            That must have been a lot of clicks, wasn't it? Now you may conveniently repeat all these steps with a single click on the following button. You may even refresh the page, scroll down and start clicking repeat right away.
+            Pressing the button will check if the solutions are initiated and if not done, does it automatically for you.
+            
             <center>
-                <button id="repeatButton" onclick="repeat()" >Repeat all steps once  </button>
+                <button id="repeatButton" onclick="repeat()" >Repeat</button>
                 <br><br>
                 <div id="generationNo">Generation: 1</div>
             </center>
@@ -599,13 +605,14 @@
             
             <br>
             <br>
-            Hope you understand how genetic algorithms work. Cheers for trying out this tutorial!
+            Now if you repeatedly click the repeat button, eventually the best solution will be all ones. <br>
+            Hope you understood how genetic algorithms work from this simple example. Cheers for trying out this tutorial!
             <br>
 
             <br>
             <br><br>
             <h2>Advanced Tip</h2>
-            You can change the population size and solution length by opening console and typing: 
+            You can play with this program using the console. For example, to update the population size or solution length update the variables <code>npop</code> and <code>genomelength</code> respectively. 
             <br><br>
             <code>npop = 12</code> <br> 
             <code>genomelength=6 </code> 
