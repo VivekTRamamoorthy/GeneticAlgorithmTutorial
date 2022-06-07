@@ -95,9 +95,6 @@ footer{
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color: white;
-  border-radius: 3px;
-  border: 1px solid black;
   margin: 10px 0;
 }
 .genomebox{
