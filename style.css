@@ -1,64 +1,54 @@
-
-
+*,*::before,*::after{
+  box-sizing: border-box;
+}
 body{
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
   background-color: whitesmoke;
   font-size:medium;
 }
-
 body a{
   color: dodgerblue;
+  opacity:0.8;
 }
-
+code{
+  font-size:1rem;
+  background-color: #ccc;
+  padding:2px;
+  border-radius: 2px;
+}
+button{
+  font:inherit;
+  border: 1px solid black;
+  box-shadow: none;
+  background-color: #eee;
+  font-size:medium;
+  border-radius: 2px;
+  padding:0.25rem;
+  margin:0.25rem;
+}
 .content{
   margin:0 13%;
   padding: 0 5%;
 }
 
-p{
-  font-size:20px;
-}
-
 body a:hover{
-  color: dodgerblue;
-  background-color: yellow;
-  /* border: 2px solid black; */
+  opacity:1;
 }
-
-
-
 h1 {
   text-align: center;
-  /*margin-top: 0px;*/
-  /*background-color: #ccc;*/
   color: Dodgerblue;
   font-size: xx-large;
   font-weight: bold;
   font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
-
-
 h2 {
   text-align: left;
   font-size: large;
-  /*background-color: #ddd;*/
   color: rgb(182, 49, 49);
-  
-  
 }
 
-h3 {
-  text-align: left;
-  /*background-color: #eee;*/
-  color: green;
-  font-size: large;
-}
-
-
-.header{
-  /* background-image: url(http://cdn.eso.org/images/screen/eso0932a.jpg) ; */
-  
+header{
   margin:0;
   padding:2px;
   display:block;
@@ -68,12 +58,8 @@ h3 {
   color: lightgoldenrodyellow;
   font-size: large;
   font-weight: bold;
-  
-  
 }
-
-.footer{
-  /* position: fixed; */
+footer{
   left: 0;
   bottom: 0;
   width: 100%;
@@ -81,14 +67,7 @@ h3 {
   color: white;
   text-align: center;
   padding:30px;
-  
 }
-
-button{
-  font-size:medium;
-}
-
-
 .column{
   float:left;
   overflow:hidden;
@@ -97,39 +76,37 @@ button{
   align-items: center;
   justify-content: center;
 }
-
 .containercol{
   width:40%;
   margin:5% 0;
 }
-
 .container{
-  
   padding:10px 2%;
   margin:10px 5px;
   width:90%;
   text-align: center;
   min-height:80px;
 }
-
 .initiate{
   width:100%;
+  min-height: 10rem;
   display:flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid black;
+  margin: 10px 0;
 }
-
 .genomebox{
   margin:4% ;
   display:inline-block;
 }
-
 .genomeName{
   text-align: center;
 }
-
 .genome{
   display:flex;
   padding:1% 5%;
@@ -138,15 +115,21 @@ button{
   align-items: center;
   justify-content: center;
 }
-
 .bit{
   width:20px;
   height:20px;
   text-align: center;
   font-size:15px;
   border: 1px solid black;
-}
+  color: black;
 
+}
+.style-for-1{
+  background-color: white;
+}
+.style-for-0{
+  background-color: #999 ;
+}
 .flex-box{
   display:flex;
   width:100%; 
@@ -157,6 +140,11 @@ button{
   overflow: auto;
   height:auto;
 }
+.flex.center{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .flex-row{
   display:flex;
@@ -165,25 +153,18 @@ button{
   justify-content: center;
   flex-wrap: nowrap;
 }
-
 .flex-column{
   display:flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-
 .selection{
   border:1px solid red;
 }
-
-
 .parent{
   border:1px solid green;
-  
 }
-
-
 .crossover{
   border:1px solid green;
 }
@@ -193,24 +174,12 @@ button{
 .mutant{
   border:1px solid green;
 }
-
 .svgcol{
   width:25%;
 }
-
 .svg{
   width:25%;
 }
-
-.style-for-1{
-  background-color: white;
-
-}
-.style-for-0{
-  background-color: gray ;
-}
-
-
 /* On screens that are 992px wide or less, go from four columns to two columns */
 @media screen and (max-width: 992px) {
   .content{
@@ -219,9 +188,7 @@ button{
   h1 {
     font-size: x-large;
   }
-
 }
-
 /* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .content{
@@ -246,15 +213,10 @@ button{
   .bit{
     width:15px;
     height:20px;
-    text-align: center;
-    font-size:15px;
-    border: 1px solid black;
   }
   .genomebox{
     padding:1px ;
   }
-  
-
   .genome{
     display:flex;
     padding:1% 1%;
@@ -264,4 +226,3 @@ button{
     justify-content: center;
   }
 }
-
