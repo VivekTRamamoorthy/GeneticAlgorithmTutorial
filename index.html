@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
     
     <!-- The loading of KaTeX is deferred to speed up page rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
     
     <!-- To automatically render math in text elements, include the auto-render extension: -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"
@@ -188,8 +188,6 @@
             
             <script> // Defining the selection operation
                 var parent1, parent2, pickedIndividuals=[1,2,3,4];
-                var parent1styles=new Array(genomelength).fill().map(x=>"background-color:rgba(255,0,0,0.4)");
-                var parent2styles=new Array(genomelength).fill().map(x=>"background-color:rgba(0,0,255,0.4)");
                 
                 var pick = function(id){
                     let boxId='select'+id;
@@ -210,6 +208,8 @@
                     parentdiv.innerHTML="";
                     cxparentdiv.innerHTML="";
                     rpparentdiv.innerHTML="";
+                    let parent1styles=new Array(genomelength).fill().map(x=>"background-color:rgba(255,0,0,0.4)");
+                    let parent2styles=new Array(genomelength).fill().map(x=>"background-color:rgba(0,0,255,0.4)");
                     
                     let selected;
                     if (id==1){
@@ -293,7 +293,7 @@
                 var crossoverType;
                 
                 var child1,child2;
-                const crossoverrate=0.5;
+                var crossoverrate=0.5;
                 const updateCrossOverType = function(){
                     // radio button
                     const rbs = document.querySelectorAll('input[name="choice"]');
@@ -317,6 +317,8 @@
                     updateCrossOverType();
                     parent1genome=pop[parent1].genome;
                     parent2genome=pop[parent2].genome;
+                    parent1styles=new Array(genomelength).fill().map(x=>"background-color:rgba(255,0,0,0.4)");
+                    parent2styles=new Array(genomelength).fill().map(x=>"background-color:rgba(0,0,255,0.4)");
                     let child1genome=[],child2genome=[];
                     let child1styles=[],child2styles=[];
                     switch (crossoverType) {
@@ -354,8 +356,8 @@
                         }
                         break;
                         case "TwoPt":
-                        let cxPt1=Math.round(Math.random()*((genomelength-1)-1-1)+1); // from second to last but one
-                        let cxPt2=Math.round(Math.random()*((genomelength-1)-cxPt1-1-1)+cxPt1+1); // from cxpt1+1 to last but one
+                        let cxPt1=Math.round(Math.random()*((genomelength-1)-1-1)); // from second to last but one
+                        let cxPt2=Math.round(Math.random()*((genomelength-1)-cxPt1-1-1)+cxPt1+2); // from cxpt1+1 to last but one
                         // cxPt can be from second to last elem
                         for (let i = 0; i < parent1genome.length; i++) {
                             if(cxPt1<=i && i<=cxPt2){
@@ -418,8 +420,8 @@
         <section>
             
             <h2>Mutation</h2>
-            In this step, the recombined solutions of the crossover operation are mutated. In this implementation, each bit is flipped (0 made 1 and 1 made 0) with a probability of 1/(array length). This is achieved using a random number generator.
-            For each bit, generate a random number uniformly between 0 and 1. Flip the bit if the random number is less than the mutation rate. Click mutate as many times as you want.
+            In this step, the recombined solutions of the crossover operation are mutated. In this implementation, each bit is flipped (0 becomes 1 and 1 becomes 0) with a probability (<code>mutationrate</code>) of 1/(array length). This is achieved using a random number generator.
+            For each bit, a random number is generated uniformly between 0 and 1. The bit is flipped if the random number is less than the <code>mutationrate</code>. Click mutate as many times as you want.
             <div class="flex-box mutatebox" >
                 <div class="column containercol" >
                     <div class="container offspring" id="childtomutatebox1">
