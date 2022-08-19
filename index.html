@@ -30,7 +30,7 @@
         <section>
             <h2>Problem formulation</h2>
             <p>
-                Let's consider the simple problem of maximising the sum of a bit array:
+                Let us consider the simple problem of maximising the sum of a bit array:
             </p>
             <div class="flex center">
                 \(\max \qquad f=\sum_{i=1}^{N} x_{i}  \)
@@ -42,7 +42,7 @@
                 The solution is obviously \( \mathbf{x}=[1, 1, 1, 1, ...] \). 
             </p>
             <p>
-                Let's see how to use genetic algorithms to find this solution.
+                Let us see how to use genetic algorithms to find this solution.
             </p>
         </section>
         
@@ -51,7 +51,7 @@
         <section>
             <h2>Initiate population</h2>
             <p>
-                First, let's generate a set of random bit arrays as our initial solutions. We will call these individual candidate solutions as the population. Click on Initiate to do this.<br><br>
+                First, let's generate a set of random bit arrays as our initial solutions. We will call these individual candidate solutions the population. Click on Initiate to do this.<br><br>
             </p>
             <div class="flex center">
                 <button id="initiateButton" onclick="initiate()">Initiate</button>
@@ -122,8 +122,8 @@
         <section>
             
             <h2>Selection</h2>
-            In this step, we will pick two parent individuals from the initial population randomly. 
-            We will apply selection pressure by picking the better of two. 
+            In this step, we will randomly pick two parent individuals from the initial population. 
+            We will apply selection pressure by picking the better of the two. 
             This is analogous to "survival of the fittest" in Darwinian evolution.
             There are other ways to apply selection pressure, but picking the best of two is called "tournament selection" since it mimics a typical knockout tournament.
             Click all the <code>Pick randomly</code> buttons and then click <code>Select</code> to see who win this tournament.
@@ -239,8 +239,8 @@
             
             <h2>Crossover or Recombination</h2>
             The selected individuals in the previous step are allowed to crossover or reproduce. 
-            There are various ways one can perform the crossover and these ways are called crossover operators.
-            In this demonstration, we illustrate three methods, namely uniform, single-point and two-point crossover. 
+            There are various ways one can perform the crossover.
+            In this demonstration, we illustrate three methods, namely, uniform, single-point and two-point crossover. 
             Pick one and click crossover. You may click crossover as many times as you want. 
             Each time a new pair of children will be generated.
             <div class="flex-box selectionbox" >
@@ -354,7 +354,7 @@
                         }
                         break;
                         case "TwoPt":
-                        let cxPt1=Math.round(Math.random()*((genomelength-1)-1-1)+1); // from secnd to last but one
+                        let cxPt1=Math.round(Math.random()*((genomelength-1)-1-1)+1); // from second to last but one
                         let cxPt2=Math.round(Math.random()*((genomelength-1)-cxPt1-1-1)+cxPt1+1); // from cxpt1+1 to last but one
                         // cxPt can be from second to last elem
                         for (let i = 0; i < parent1genome.length; i++) {
@@ -503,7 +503,7 @@
             
             <h2> Replacement</h2>
             In this step, a decision will be made as to whether the mutated offspring will replace the parents. Again there are several ways to perform this. 
-            In this implementation, a greedy acceptance is used i.e., only if the offspring is strictly better (has more ones) it replaces the parent.
+            In this implementation, a greedy acceptance is used, i.e., only if the offspring is strictly better (has more ones), it replaces the parent.
             Once you click replace button, the population will be updated.
             <div class="flex-row" >
                 <div class="column containercol"   >
@@ -565,7 +565,7 @@
         <!-- REPEAT  -->
         <section>
             <h2>Repeat</h2>
-            That must have been a lot of clicks, wasn't it? Now, you may conveniently repeat all these steps with a single click on the following button. You may even refresh the page, scroll down and start clicking repeat right away.
+            That must have been a lot of clicks, wasn't it? Now, you may conveniently repeat all these steps with a single click on the following button. You may also refresh the page, scroll down and start clicking repeat immediately.
             Pressing the button will check if the solutions are initiated and if not done, does it automatically for you.
             
             <center>
@@ -627,21 +627,24 @@
             
             <br>
             <br>
-            Now if you repeatedly click the repeat button, eventually the best solution will be all ones. <br>
+            Now if you repeatedly click the Repeat button, eventually the best solution will be all ones. <br><br>
             Hope you understood how genetic algorithms work from this simple example. Cheers for trying out this tutorial!
             <br>
             
             <br>
             <br><br>
             <h2>Bonus tip</h2>
-            You can play with this program using the console. For example, to update the population size or solution length update the variables <code>npop</code> and <code>genomelength</code> respectively. 
+            You can play with this program using the console. For example, to update the population size or bit length, update the variables <code>npop</code> or <code>genomelength</code>. 
+            To do this, open console by right-click > inspect, click on Console, and then enter the following:
             <br><br>
-            <code>npop = 12</code> <br> 
-            <code>genomelength=6 </code> 
+            <pre>
+                <code>npop = 12</code> 
+                <code>genomelength = 6 </code> 
+            </pre>
             <br><br>
-            Then click Repeat. You should see that the initial population has 12 individuals and each have 6 bits.
-            To open console Chrome, rightclick and click inspect. <br> <br>
-            Feel free to explore!
+            Then click on Initiate. You should see that the initial population has 12 individuals, each with 6 bits.
+             <br> <br>
+            Feel free to explore! 
             
             <br><br><br><br>
             <br><br><br><br>
